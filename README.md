@@ -1,4 +1,5 @@
-# Xeno_ROS_Ecat_Master
+# Robot_EtherCAT_Platform
+
 Reference : https://github.com/saga0619/rtnet_soem.git  
             https://github.com/OpenEtherCATsociety/SOEM.git  
             https://source.denx.de/Xenomai/xenomai/-/wikis/home  
