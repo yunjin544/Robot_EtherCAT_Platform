@@ -148,7 +148,7 @@ OSAL_THREAD_FUNC_RT ECat_PDO_LOOP(void *arg)
    while (1)
    {  
       clock_gettime(CLOCK_MONOTONIC, &begin);
-      add_timespec(&ts, cycletime);
+      //add_timespec(&ts, cycletime);
    
       //clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, &tleft);
      /* Start Loop - Write your Realtime Program*/
