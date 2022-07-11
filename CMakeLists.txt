@@ -127,8 +127,20 @@ include_directories(
 )
 
 
-add_executable(Publisher src/publisher_node.cpp)
-target_link_libraries(Publisher 
+add_executable(RT_Ecat_master src/RT_Ecat_master.cpp)
+add_executable(Non_RT_Ecat_master src/Ecat_master.cpp)
+
+
+target_link_libraries(RT_Ecat_master 
+-lsoem
+-lpthread
+-lalchemy 
+-lcopperplate
+  ${XENO_CFLAGS}
+  ${XENO_LDFLAGS}
+  ${catkin_LIBRARIES})
+  
+target_link_libraries(Non_RT_Ecat_master 
 -lsoem
 -lpthread
 -lalchemy 

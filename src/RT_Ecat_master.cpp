@@ -68,7 +68,7 @@ int save_i = 0;
 	ss << (int)(ec_slave[0].inputs[0]) << "<-variable resistance level  "; 
 	msg.data = ss.str();
 
-	printf("%s\r", msg.data.c_str());
+	//printf("%s\r", msg.data.c_str());
 	
 	chatter_pub.publish(msg);
 	    ros::spinOnce();
@@ -114,20 +114,26 @@ void ECat_init(char *ifname)
 
 void ECat_PDO_LOOP(void *arg)
 {
-
+   struct timespec   begin, end;
    RT_TASK *curtask;
-   rt_task_set_periodic(NULL, TM_NOW, LOOP_PERIOD);
+   rt_task_set_periodic(NULL, TM_NOW, 5e5);
    unsigned int i = 0;
    while (1)
    {
+      clock_gettime(CLOCK_MONOTONIC, &begin);
      /* Start Loop - Write your Realtime Program*/
       wkc = ec_receive_processdata(EC_TIMEOUTRET);
 
       ec_slave[0].outputs[0] = !(ec_slave[0].outputs[0]);
-   
+
       ec_send_processdata();
-      rt_task_wait_period(NULL);
       
+
+      rt_task_wait_period(NULL);
+      clock_gettime(CLOCK_MONOTONIC, &end);
+      long time = (end.tv_sec - begin.tv_sec) + (end.tv_nsec - begin.tv_nsec);
+      double time_s = (double)time/1000000000;
+      rt_printf("Time (Second): %lf\r",1/time_s);
       /* End Loop */
    }
 }
