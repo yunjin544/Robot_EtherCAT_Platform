@@ -34,6 +34,8 @@ struct timespec time_stamp[2000];
 int tick[2000];
 char flag =0;
 
+
+
 void ECat_init(char *ifname, char *ifname2);
 void ECat_PDO_LOOP(void *arg);
 void Ecatcheck(void *ptr);
@@ -112,6 +114,8 @@ void ECat_init(char *ifname, char *ifname2)
          ;
    }
 }
+
+
 
 
 void ECat_PDO_LOOP(void *arg)

@@ -129,6 +129,7 @@ include_directories(
 
 add_executable(RT_Ecat_master src/RT_Ecat_master.cpp)
 add_executable(Non_RT_Ecat_master src/Ecat_master.cpp)
+add_executable(Test_Ecat_master src/publisher_node.cpp)
 
 
 target_link_libraries(RT_Ecat_master 
@@ -148,6 +149,17 @@ target_link_libraries(Non_RT_Ecat_master
   ${XENO_CFLAGS}
   ${XENO_LDFLAGS}
   ${catkin_LIBRARIES})
+
+target_link_libraries(Test_Ecat_master 
+-lsoem
+-lpthread
+-lalchemy 
+-lcopperplate
+  ${XENO_CFLAGS}
+  ${XENO_LDFLAGS}
+  ${catkin_LIBRARIES})
+
+  
 #add_dependencies(talker beginner_tutorials_generate_messages_cpp)
 
 
