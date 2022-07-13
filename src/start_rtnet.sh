@@ -7,7 +7,7 @@
 # ------- Configuration  --------
 # Pci address of NIC (ex: 0000:03:00.0)
 #   Pci address can be checked with lspci
-devices="0000:02:00.0 0000:02:00.1"
+devices="0000:02:00.0 0000:02:00.1 0000:02:00.2 0000:02:00.3"
 
 # default loaded driver on the NIC.
 #   List of drivers that can be used on the NIC, can be checked with 'lspci -v' command on terminal. (ex: kernel modules : igb, rt_igb)

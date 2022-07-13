@@ -18,7 +18,6 @@
 #define EC_TIMEOUTMON 500
 #define LOOP_PERIOD 1e6
 #define NSEC_PER_SEC 1000000000
-#define stack64k (64 * 1024)
 
 char IOmap[256];
 int expectedWKC;
@@ -35,29 +34,29 @@ struct timespec time_stamp[2000];
 int tick[2000];
 char flag =0;
 
-//void ECat_init(char *ifname, char *ifname2);
-void ECat_init(char *ifname);
+
+void ECat_init(char *ifname, char *ifname2);
 void ECat_PDO_LOOP(void *arg);
 void Ecatcheck(void *ptr);
 
 int main(int argc, char **argv)
 {
 
-mlockall(MCL_CURRENT | MCL_FUTURE);
+
+	cpu_set_t set;
+	CPU_ZERO(&set);
+	CPU_SET(0,&set);
 
 ros::init(argc,argv,"robot_Ecat_master");
 ros::NodeHandle n;
 ros::Publisher chatter_pub = n.advertise<std_msgs::String>("ros_communication", 1000);
-ros::Rate loop_rate(2000);
+ros::Rate loop_rate(1000);
 
-//ECat_init("rteth0","rteth1");
-ECat_init(argv[1]);
-
-rt_task_create(&loop_task, "Ecat Loop", stack64k*2, 99, 0);
+ECat_init(argv[1],argv[2]);
+osal_thread_create(&thread1, 128000, (void*)&Ecatcheck, NULL);
+rt_task_create(&loop_task, "Ecat Loop", 0, 99, 0);
+rt_task_set_affinity(&loop_task,&set);
 rt_task_start(&loop_task, &ECat_PDO_LOOP, 0);
-
-osal_thread_create(&thread1, stack64k*4, (void*)&Ecatcheck, NULL);
-
 int count = 0;
 int save_i = 0;
  while (ros::ok())
@@ -68,8 +67,18 @@ int save_i = 0;
 	ss << (int)(ec_slave[0].inputs[0]) << "<-variable resistance level  "; 
 	msg.data = ss.str();
 
-	//printf("%s\r", msg.data.c_str());
-	
+	printf("%s\r", msg.data.c_str());
+	 
+   // if (flag == 1)
+   // {
+   //    FILE *fp;
+   //    fp = fopen("test.txt", "w");
+   //    for(save_i=0;save_i<=2000;save_i++)
+   //    {
+   //       long temp = time_stamp[save_i].tv_sec + time_stamp[save_i].tv_nsec;
+   //       fprintf(fp,"%ld,%d\n",temp,tick[save_i]);
+   //    }
+   // }
 	chatter_pub.publish(msg);
 	    ros::spinOnce();
 	   loop_rate.sleep();
@@ -79,10 +88,10 @@ int save_i = 0;
 }
 
 
-void ECat_init(char *ifname)
+void ECat_init(char *ifname, char *ifname2)
 {
 
-   if (ec_init(ifname))
+   if (ec_init_redundant(ifname, ifname2))
    {
       printf("Starting Ecat DRCL Master Test\n");
 
@@ -112,28 +121,48 @@ void ECat_init(char *ifname)
 }
 
 
+
+
 void ECat_PDO_LOOP(void *arg)
 {
-   struct timespec   begin, end;
    RT_TASK *curtask;
-   rt_task_set_periodic(NULL, TM_NOW, 5e5);
+   rt_task_set_periodic(NULL, TM_NOW, LOOP_PERIOD);
    unsigned int i = 0;
    while (1)
    {
-      clock_gettime(CLOCK_MONOTONIC, &begin);
      /* Start Loop - Write your Realtime Program*/
       wkc = ec_receive_processdata(EC_TIMEOUTRET);
+      // if(flag == 0 )
+      // {
+      //    clock_gettime(CLOCK_MONOTONIC, &time_stamp[i]);
+      //    if (i == 0)
+      //    {
+      //       tick[0]=0;
+      //    }
+      //    else
+      //    {
+      //       tick[i]=tick[i-1]+1;
+      //    }
+         
+      // if (tick[i] == 255)
+      // {
+      // tick[i]=0;
+      // }
+
+      // }
+
+      // if(i>2000)
+      // {
+      //    flag = 1;
+      // }
+      // i = i+1;
 
       ec_slave[0].outputs[0] = !(ec_slave[0].outputs[0]);
 
+            
       ec_send_processdata();
-      
-
       rt_task_wait_period(NULL);
-      clock_gettime(CLOCK_MONOTONIC, &end);
-      long time = (end.tv_sec - begin.tv_sec) + (end.tv_nsec - begin.tv_nsec);
-      double time_s = (double)time/1000000000;
-      rt_printf("Time (Second): %lf\r",1/time_s);
+      
       /* End Loop */
    }
 }

@@ -35,13 +35,17 @@ int tick[2000];
 char flag =0;
 
 
-
 void ECat_init(char *ifname, char *ifname2);
 void ECat_PDO_LOOP(void *arg);
 void Ecatcheck(void *ptr);
 
 int main(int argc, char **argv)
 {
+
+
+	cpu_set_t set;
+	CPU_ZERO(&set);
+	CPU_SET(0,&set);
 
 ros::init(argc,argv,"robot_Ecat_master");
 ros::NodeHandle n;
@@ -51,6 +55,7 @@ ros::Rate loop_rate(1000);
 ECat_init(argv[1],argv[2]);
 osal_thread_create(&thread1, 128000, (void*)&Ecatcheck, NULL);
 rt_task_create(&loop_task, "Ecat Loop", 0, 99, 0);
+rt_task_set_affinity(&loop_task,&set);
 rt_task_start(&loop_task, &ECat_PDO_LOOP, 0);
 int count = 0;
 int save_i = 0;
