@@ -1,5 +1,5 @@
 # Robot_EtherCAT_Platform
-## If You use this project , You must intall Xenomai kenel!!
+## If You use this project , You must intall Xenomai kernel!!
 
 Reference : 
 https://github.com/saga0619/rtnet_soem.git  (start_rtnet.sh & red_test)
