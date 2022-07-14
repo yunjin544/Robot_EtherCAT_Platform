@@ -11,7 +11,11 @@ Requirement : Xenomai : 3.2.1
               RT-net  : NIC Card ( Test done! : I210 & I340 )  // WGI210AT & E1G44HT  
               ROS1    : Noetic  
               
+How to Use
+'''
+git clone 
+'''
+
+              
 To-do
-1. Activation of Redudancy Mode 
-2. Activation of Distributed Clock Mode
-       
+1. Debugging Distributed Clock Mode       
