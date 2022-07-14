@@ -12,6 +12,7 @@
 #include "ethercat.h"
 
 #include "ros/ros.h"
+#include "std_msgs/Int32.h"
 #include "std_msgs/String.h"
 
 #define CLOCK_RES 1e-9 
@@ -34,6 +35,12 @@ struct timespec time_stamp[2000];
 int tick[2000];
 char flag =0;
 
+int cycle ;
+int deltat, tmax = 0;
+int DCdiff;
+struct timeval tv, t1, t2;
+
+
 
 void ECat_init(char *ifname, char *ifname2);
 void ECat_PDO_LOOP(void *arg);
@@ -41,15 +48,13 @@ void Ecatcheck(void *ptr);
 
 int main(int argc, char **argv)
 {
-
-
 	cpu_set_t set;
 	CPU_ZERO(&set);
 	CPU_SET(0,&set);
-
+   cycle = atoi(argv[3]);
 ros::init(argc,argv,"robot_Ecat_master");
 ros::NodeHandle n;
-ros::Publisher chatter_pub = n.advertise<std_msgs::String>("ros_communication", 1000);
+ros::Publisher chatter_pub = n.advertise<std_msgs::Int32>("ros_communication", 1000);
 ros::Rate loop_rate(1000);
 
 ECat_init(argv[1],argv[2]);
@@ -59,26 +64,13 @@ rt_task_set_affinity(&loop_task,&set);
 rt_task_start(&loop_task, &ECat_PDO_LOOP, 0);
 int count = 0;
 int save_i = 0;
+   std_msgs::Int32 msg;
+
  while (ros::ok())
  {
+	msg.data = (int)(ec_slave[0].inputs[0]);
 
-	std_msgs::String msg;
-	std::stringstream ss;
-	ss << (int)(ec_slave[0].inputs[0]) << "<-variable resistance level  "; 
-	msg.data = ss.str();
 
-	printf("%s\r", msg.data.c_str());
-	 
-   // if (flag == 1)
-   // {
-   //    FILE *fp;
-   //    fp = fopen("test.txt", "w");
-   //    for(save_i=0;save_i<=2000;save_i++)
-   //    {
-   //       long temp = time_stamp[save_i].tv_sec + time_stamp[save_i].tv_nsec;
-   //       fprintf(fp,"%ld,%d\n",temp,tick[save_i]);
-   //    }
-   // }
 	chatter_pub.publish(msg);
 	    ros::spinOnce();
 	   loop_rate.sleep();
@@ -93,76 +85,132 @@ void ECat_init(char *ifname, char *ifname2)
 
    if (ec_init_redundant(ifname, ifname2))
    {
-      printf("Starting Ecat DRCL Master Test\n");
+      printf("DRCL EtherCAT Master Init Succeeded!! ( on %s , %s)\n",ifname,ifname2);
 
       if (ec_config_init(FALSE) > 0)
       {
+         ec_config_map(&IOmap);
          printf("%d slaves found and configured.\n", ec_slavecount);
+
+         ec_statecheck(0, EC_STATE_SAFE_OP, EC_TIMEOUTSTATE);
+
+         ec_configdc();
+
+         ec_readstate();
+
+         printf("segments : %d : %d %d %d %d\n", ec_group[0].nsegments, ec_group[0].IOsegment[0], ec_group[0].IOsegment[1], ec_group[0].IOsegment[2], ec_group[0].IOsegment[3]);
+
+      
+         expectedWKC = (ec_group[0].outputsWKC * 2) + ec_group[0].inputsWKC;
+         printf("Calculated workcounter %d\n", expectedWKC);
+         
+         printf("Request operational state for all slaves\n");
+         
+         ec_slave[0].state = EC_STATE_OPERATIONAL;
+
+         ec_writestate(0);
+         ec_statecheck(0, EC_STATE_OPERATIONAL, 5*EC_TIMEOUTSTATE);
+
+         if (ec_slave[0].state == EC_STATE_OPERATIONAL )
+         {
+            printf("Operational state reached for all slaves.\n");
+         }
+         else
+         {
+            printf("Not all slaves reached operational state.\n");
+            ec_readstate();
+         }
+         printf("Request safe operational state for all slaves\n");
+         ec_slave[0].state = EC_STATE_SAFE_OP;
+         /* request SAFE_OP state for all slaves */
+         ec_writestate(0);
+
+         // ec_send_processdata();
+         // ec_receive_processdata(EC_TIMEOUTRET);
+         
+         // chk = 200;
+         // ec_send_processdata();
+         // ec_receive_processdata(EC_TIMEOUTRET);
+         
+         // while (chk-- && (ec_slave[0].state != EC_STATE_OPERATIONAL))
+         //    ;
       }
-
-      ec_config_map(&IOmap);
-      printf("Slaves mapped, state to SAFE_OP.\n");
-      ec_statecheck(0, EC_STATE_SAFE_OP, EC_TIMEOUTSTATE * 4);
-
-      printf("segments : %d : %d %d %d %d\n", ec_group[0].nsegments, ec_group[0].IOsegment[0], ec_group[0].IOsegment[1], ec_group[0].IOsegment[2], ec_group[0].IOsegment[3]);
-      expectedWKC = (ec_group[0].outputsWKC * 2) + ec_group[0].inputsWKC;
-      printf("Calculated workcounter %d\n", expectedWKC);
-      ec_slave[0].state = EC_STATE_OPERATIONAL;
-      ec_send_processdata();
-      ec_receive_processdata(EC_TIMEOUTRET);
-      ec_writestate(0);
-      chk = 200;
-      ec_send_processdata();
-      ec_receive_processdata(EC_TIMEOUTRET);
-      ec_statecheck(0, EC_STATE_OPERATIONAL, 50000);
-      while (chk-- && (ec_slave[0].state != EC_STATE_OPERATIONAL))
-         ;
+      else
+      {
+         printf("No socket connection on %s\nExcecute as root\n",ifname);
+      }
+   }
+   else
+   {
+      printf("No socket connection on %s\nExcecute as root\n",ifname);
    }
 }
 
+void ec_sync(int64 reftime, int64 cycletime , int64 *offsettime)
+{
+   static int64 integral = 0;
+   int64 delta;
+   /* set linux sync point 50us later than DC sync, just as example */
+   delta = (reftime - 50000) % cycletime;
+   if(delta> (cycletime / 2)) { delta= delta - cycletime; }
+   if(delta>0){ integral++; }
+   if(delta<0){ integral--; }
+   *offsettime = -(delta / 100) - (integral / 20);
+   gl_delta = delta;
+}
 
+void add_timespec(struct timespec *ts, int64 addtime)
+{
+   int64 sec, nsec;
 
+   nsec = addtime % NSEC_PER_SEC;
+   sec = (addtime - nsec) / NSEC_PER_SEC;
+   ts->tv_sec += sec;
+   ts->tv_nsec += nsec;
+   if ( ts->tv_nsec > NSEC_PER_SEC )
+   {
+      nsec = ts->tv_nsec % NSEC_PER_SEC;
+      ts->tv_sec += (ts->tv_nsec - nsec) / NSEC_PER_SEC;
+      ts->tv_nsec = nsec;
+   }
+}
 
 void ECat_PDO_LOOP(void *arg)
 {
    RT_TASK *curtask;
-   rt_task_set_periodic(NULL, TM_NOW, LOOP_PERIOD);
+   struct timespec   ts, tleft;
+   int ht;
+   int64 cycletime;
+   struct timespec   begin, end;
+   clock_gettime(CLOCK_MONOTONIC, &ts);
+   ht = (ts.tv_nsec / 1000000) + 1; /* round to nearest ms */
+   ts.tv_nsec = ht * 1000000;
+   cycletime = cycle * 1000; /* cycletime in ns */
+   
+   
+   //rt_task_set_periodic(NULL, TM_NOW, LOOP_PERIOD);
+   ec_send_processdata();
+   RTIME time;
    unsigned int i = 0;
    while (1)
-   {
+   {  //clock_gettime(CLOCK_MONOTONIC, &begin);
+      add_timespec(&ts, cycletime + toff);
+      time = (ts.tv_sec) + (ts.tv_nsec);
+      rt_task_sleep_until(time);
      /* Start Loop - Write your Realtime Program*/
       wkc = ec_receive_processdata(EC_TIMEOUTRET);
-      // if(flag == 0 )
-      // {
-      //    clock_gettime(CLOCK_MONOTONIC, &time_stamp[i]);
-      //    if (i == 0)
-      //    {
-      //       tick[0]=0;
-      //    }
-      //    else
-      //    {
-      //       tick[i]=tick[i-1]+1;
-      //    }
-         
-      // if (tick[i] == 255)
-      // {
-      // tick[i]=0;
-      // }
 
-      // }
-
-      // if(i>2000)
-      // {
-      //    flag = 1;
-      // }
-      // i = i+1;
 
       ec_slave[0].outputs[0] = !(ec_slave[0].outputs[0]);
 
             
       ec_send_processdata();
-      rt_task_wait_period(NULL);
-      
+      //rt_task_wait_period(NULL);
+      clock_gettime(CLOCK_MONOTONIC, &end);
+
+      //long ptime = (end.tv_sec - begin.tv_sec) + (end.tv_nsec - begin.tv_nsec);
+      //double time_s = (double)ptime/1000000000;
+      //rt_printf("Frequency (): %4.2lf\r",1/time_s);
       /* End Loop */
    }
 }
