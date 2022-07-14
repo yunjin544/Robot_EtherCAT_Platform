@@ -12,9 +12,10 @@ Requirement : Xenomai : 3.2.1
               ROS1    : Noetic  
               
 How to Use
-'''
-git clone 
-'''
+```
+cd {your_ROS_ws}
+git clone https://github.com/yunjin544/Robot_EtherCAT_Platform.git
+```
 
               
 To-do
