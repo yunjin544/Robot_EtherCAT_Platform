@@ -1,8 +1,10 @@
 # Robot_EtherCAT_Platform
+## If You use this project , You must intall Xenomai kenel!!
 
-Reference : https://github.com/saga0619/rtnet_soem.git  
-            https://github.com/OpenEtherCATsociety/SOEM.git  
-            https://source.denx.de/Xenomai/xenomai/-/wikis/home  
+Reference : 
+https://github.com/saga0619/rtnet_soem.git  (start_rtnet.sh & red_test)
+https://github.com/OpenEtherCATsociety/SOEM.git  (red_test)
+https://source.denx.de/Xenomai/xenomai/-/wikis/home  (Xenomai API)
 
 Requirement : Xenomai : 3.2.1   
               Linux   : 5.4.180  
