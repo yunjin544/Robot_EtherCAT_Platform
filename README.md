@@ -1,5 +1,5 @@
 # Robot_EtherCAT_Platform
-## If You use this project , You must intall Xenomai kernel!!
+## If You use this project , You must install Xenomai kernel!!
 
 Reference :   
 https://github.com/saga0619/rtnet_soem.git(start_rtnet.sh & red_test)  
@@ -31,4 +31,6 @@ sudo ./RT_Ecat_master rteth0 rteth1
 ```
               
 To-do
-1. Debugging Distributed Clock Mode       
+1. Debugging Distributed Clock Mode     
+
+
