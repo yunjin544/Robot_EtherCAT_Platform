@@ -35,4 +35,4 @@ To-do
 
 ChangeLOG  
 8/6  
-Add VESCular6 Motor Controller Packet Fuction  
+Add VESCular6 Motor Controller Packet Fuction (VESCualr6 Motor Controller : https://dongilc.gitbook.io/openrobot-inc/)  
