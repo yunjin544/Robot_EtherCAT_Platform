@@ -33,4 +33,6 @@ sudo ./RT_Ecat_master rteth0 rteth1
 To-do
 1. Debugging Distributed Clock Mode     
 
-
+ChangeLOG
+8/6
+Add VESCular6 Motor Controller Packet Fuction
