@@ -8,6 +8,7 @@
 #include <time.h>
 #include <pthread.h>
 #include <math.h>
+#include "VESCular_ethercat.h"
 
 #include "ethercat.h"
 
@@ -50,20 +51,12 @@ osal_thread_create(&thread1, stack64k*4, (void*)&Ecatcheck, NULL);
 osal_thread_create_rt(&thread2, stack64k * 2,(void*)&ECat_PDO_LOOP, &ctime);
 int count = 0;
 int save_i = 0;
+
+
  while (ros::ok())
  {
 
-	std_msgs::String msg;
-	std::stringstream ss;
-	ss << (int)(ec_slave[0].inputs[0]) << "<-variable resistance level  "; 
-	msg.data = ss.str();
 
-	//printf("%s\r", msg.data.c_str());
-	
-	chatter_pub.publish(msg);
-	    ros::spinOnce();
-	   loop_rate.sleep();
-	++count;
 	}
   return 0;
 }
@@ -154,11 +147,16 @@ OSAL_THREAD_FUNC_RT ECat_PDO_LOOP(void *arg)
      /* Start Loop - Write your Realtime Program*/
       wkc = ec_receive_processdata(EC_TIMEOUTRET);
 
-      ec_slave[0].outputs[0] = !(ec_slave[0].outputs[0]);
    
+      int* send_data =ethercat_send_cmd("duty",-0.3);
+
+      for(int i = 0 ; i<BYTE_NUM ;i++)
+      {
+         ec_slave[0].outputs[i]=send_data[i];
+      }
+         
       ec_send_processdata();
 
-      
       osal_usleep(500);
       clock_gettime(CLOCK_MONOTONIC, &end);
 

@@ -1,25 +1,14 @@
-#include <stdio.h>
-#include <string.h>
-#include <inttypes.h>
-#include <sys/mman.h>
-#include <stdlib.h>
-#include <math.h>
-#include <unistd.h>
-#include <signal.h>
-#include <time.h>
-#include <alchemy/task.h>
-#include <alchemy/timer.h>
-#include "ethercat.h"
-
+#include "DRCL_Ecat.h"
 #include "ros/ros.h"
 #include "std_msgs/Int32.h"
+#include "VESCular_ethercat.h"
 
 #define CLOCK_RES 1e-9 
 #define EC_TIMEOUTMON 500
-#define LOOP_PERIOD 1e6
+#define LOOP_PERIOD 5e5
 #define NSEC_PER_SEC 1000000000
 
-char IOmap[256];
+char IOmap[512];
 int expectedWKC;
 int chk;
 volatile int wkc;
@@ -33,29 +22,41 @@ RT_TASK loop_task;
 struct timespec time_stamp[2000];
 int tick[2000];
 char flag =0;
-
+float duty_ratio =0.0 ;
 
 void ECat_init(char *ifname, char *ifname2);
 void ECat_PDO_LOOP(void *arg);
 void Ecatcheck(void *ptr);
 
+
+void chatterCallback(const std_msgs::Int32& msg)
+{
+   if (msg.data< 100 && msg.data > -100)
+   {
+      duty_ratio = float(msg.data)/100.0 ;
+  
+   }
+  
+}
+
 int main(int argc, char **argv)
 {
 
 
-	cpu_set_t set;
-	CPU_ZERO(&set);
-	CPU_SET(0,&set);
+	// cpu_set_t set;
+	// CPU_ZERO(&set);
+	// CPU_SET(2,&set);
 
 ros::init(argc,argv,"robot_Ecat_master");
 ros::NodeHandle n;
 ros::Publisher chatter_pub = n.advertise<std_msgs::Int32>("ros_communication", 1000);
+ros::Subscriber sub = n.subscribe("duty", 10, chatterCallback);
 ros::Rate loop_rate(1000);
 
 ECat_init(argv[1],argv[2]);
 osal_thread_create(&thread1, 128000, (void*)&Ecatcheck, NULL);
 rt_task_create(&loop_task, "Ecat Loop", 0, 99, 0);
-rt_task_set_affinity(&loop_task,&set);
+// rt_task_set_affinity(&loop_task,&set);
 rt_task_start(&loop_task, &ECat_PDO_LOOP, 0);
 int count = 0;
 int save_i = 0;
@@ -119,34 +120,15 @@ void ECat_PDO_LOOP(void *arg)
    {
      /* Start Loop - Write your Realtime Program*/
       wkc = ec_receive_processdata(EC_TIMEOUTRET);
-      // if(flag == 0 )
-      // {
-      //    clock_gettime(CLOCK_MONOTONIC, &time_stamp[i]);
-      //    if (i == 0)
-      //    {
-      //       tick[0]=0;
-      //    }
-      //    else
-      //    {
-      //       tick[i]=tick[i-1]+1;
-      //    }
-         
-      // if (tick[i] == 255)
-      // {
-      // tick[i]=0;
-      // }
+      int* send_data =ethercat_send_cmd("duty",duty_ratio);
 
-      // }
+      for(int i = 0 ; i<BYTE_NUM ;i++)
+      {
+         ec_slave[1].outputs[i]=send_data[i];
+      }
+      
 
-      // if(i>2000)
-      // {
-      //    flag = 1;
-      // }
-      // i = i+1;
-
-      ec_slave[0].outputs[0] = !(ec_slave[0].outputs[0]);
-
-            
+      rt_printf("%d\r",i);  
       ec_send_processdata();
       rt_task_wait_period(NULL);
       

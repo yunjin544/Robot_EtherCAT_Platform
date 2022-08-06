@@ -105,7 +105,7 @@ string(FIND ${UNAME_RES} "xenomai" wsloc)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+# INCLUDE_DIRS include
 #  LIBRARIES robot_ecat_master
 #  CATKIN_DEPENDS roscpp std_msgs
 #  DEPENDS system_lib
@@ -124,6 +124,7 @@ include_directories(
   /usr/xenomai/include/
   /usr/xenomai/include/alchemy
   /usr/xenomai/include/cobalt
+  /home/drcl/catkin_ws/src/Robot_EtherCAT_Platform/include/ #여기 동적 할당으로 수정하기
 )
 
 
