@@ -124,15 +124,15 @@ include_directories(
   /usr/xenomai/include/
   /usr/xenomai/include/alchemy
   /usr/xenomai/include/cobalt
-  /home/drcl/catkin_ws/src/Robot_EtherCAT_Platform/include/ #여기 동적 할당으로 수정하기
+  includes/
 )
 
 
 add_executable(RT_Ecat_master src/RT_Ecat_master.cpp)
-add_executable(Non_RT_Ecat_master src/Ecat_master.cpp)
-add_executable(Test_Ecat_master src/Test_node.cpp)
+#add_executable(Non_RT_Ecat_master src/Ecat_master.cpp)
+#add_executable(Test_Ecat_master src/Test_node.cpp)
 add_executable(RT_Ecat_master_DC src/RT_Ecat_master_DC.cpp)
-
+add_executable(Shared_Test_Node src/RT_Ecat_master_Shared_Mem.cpp src/Shared_Memory.cpp)
 
 
 target_link_libraries(RT_Ecat_master 
@@ -144,23 +144,23 @@ target_link_libraries(RT_Ecat_master
   ${XENO_LDFLAGS}
   ${catkin_LIBRARIES})
   
-target_link_libraries(Non_RT_Ecat_master 
--lsoem
--lpthread
--lalchemy 
--lcopperplate
-  ${XENO_CFLAGS}
-  ${XENO_LDFLAGS}
-  ${catkin_LIBRARIES})
+# target_link_libraries(Non_RT_Ecat_master 
+# -lsoem
+# -lpthread
+# -lalchemy 
+# -lcopperplate
+#   ${XENO_CFLAGS}
+#   ${XENO_LDFLAGS}
+#   ${catkin_LIBRARIES})
 
-target_link_libraries(Test_Ecat_master 
--lsoem
--lpthread
--lalchemy 
--lcopperplate
-  ${XENO_CFLAGS}
-  ${XENO_LDFLAGS}
-  ${catkin_LIBRARIES})
+# target_link_libraries(Test_Ecat_master 
+# -lsoem
+# -lpthread
+# -lalchemy 
+# -lcopperplate
+#   ${XENO_CFLAGS}
+#   ${XENO_LDFLAGS}
+#   ${catkin_LIBRARIES})
   
 target_link_libraries(RT_Ecat_master_DC 
 -lsoem
@@ -170,6 +170,15 @@ target_link_libraries(RT_Ecat_master_DC
   ${XENO_CFLAGS}
   ${XENO_LDFLAGS}
   ${catkin_LIBRARIES})
+
+  target_link_libraries(Shared_Test_Node 
+  -lsoem
+  -lpthread
+  -lalchemy 
+  -lcopperplate
+    ${XENO_CFLAGS}
+    ${XENO_LDFLAGS}
+    ${catkin_LIBRARIES})
 
   
 #add_dependencies(talker beginner_tutorials_generate_messages_cpp)

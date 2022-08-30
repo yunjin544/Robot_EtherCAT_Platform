@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/devel/setup.sh

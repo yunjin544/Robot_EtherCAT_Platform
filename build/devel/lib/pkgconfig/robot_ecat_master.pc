@@ -1,0 +1,8 @@
+prefix=/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/devel
+
+Name: robot_ecat_master
+Description: Description of robot_ecat_master
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
