@@ -55,7 +55,7 @@ int main(int argc, char **argv)
       while(1)
       {
          
-         duty_ratio= float(*shmem[DUTY])/100.0;
+         duty_ratio= float(*shmem[VALUE])/100.0;
          
       //   printf("duty_ratio = %0.3f num = %d \r",duty_ratio,(*shmem[DUTY]));
 
@@ -166,10 +166,10 @@ void ECat_PDO_LOOP(void *arg)
      /* Start Loop - Write your Realtime Program*/
       wkc = ec_receive_processdata(EC_TIMEOUTRET);
       
-      vesc.ethercat_send_cmd(1,"duty",duty_ratio);
+      vesc.ethercat_send_cmd(1,*shmem[MODE],duty_ratio);  //ethercat_send_cmd(int slave, string Mode, int duty )
       
 
-      rt_printf("%d\r",i);  
+      //rt_printf("%d\r",i);  
       ec_send_processdata();
       rt_task_wait_period(NULL);
       

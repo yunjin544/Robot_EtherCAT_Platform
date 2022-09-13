@@ -50,7 +50,7 @@ class VESC_PACKET{
 
     public:
     int* packet_encoding( int comm , Ecat_raw data );
-    int ethercat_send_cmd(int slave, char *cmd , float value );
+    int ethercat_send_cmd(int slave, int cmd , float value );
     int get_bytes(int data[], int length , float div);
     int crc_check(int dataframe[], int len, int com_crch , int com_crcl);
    
@@ -137,7 +137,7 @@ int* VESC_PACKET::packet_encoding( int comm , Ecat_raw data ){
 }
 
 
-int VESC_PACKET::ethercat_send_cmd(int slave ,char *cmd , float value ){
+int VESC_PACKET::ethercat_send_cmd(int slave ,int cmd , float value ){
 
     
     if(slave > ec_slavecount)
@@ -156,22 +156,22 @@ int VESC_PACKET::ethercat_send_cmd(int slave ,char *cmd , float value ){
     int hostype = ETHERCAT;
     float set_value = 0;
     
-    if (cmd == "duty")
+    if (cmd == 1)
     {
         temp.command = COMM_SET_DUTY;
         temp.set_value = value ;
     }
-    else if (cmd == "current")
+    else if (cmd == 2)
     {
         temp.command = COMM_SET_CURRENT;
         temp.set_value = value ;
     }
-    else if (cmd == "current_brake")
+    else if (cmd == 3)
     {
         temp.command = COMM_SET_CURRENT_BRAKE;
         temp.set_value = value ;
     }
-    else if (cmd == "release")
+    else if (cmd == 4)
     {
         temp.command = COMM_SET_CURRENT;
         temp.set_value = 0 ;

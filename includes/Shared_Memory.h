@@ -11,7 +11,12 @@
 #define KEY_NUM 1234   /* SHM KEY = SEM KEY */
 #define SHARED_SIZE 50
 
-#define DUTY 0           // START MEMORY MAP
+
+
+// START SHARED MEMORY MAP 
+#define VALUE 0          // DUTY : 1 , Current :2 , Current Brake : 3 
+#define MODE 1
+#define SELECT 47
 #define SLAVE_N 48
 #define ECAT_INIT 49
 
