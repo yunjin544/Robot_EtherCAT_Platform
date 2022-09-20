@@ -36,12 +36,15 @@ class VESC_VALUES{
         float tacho_abs = 0;
         float fault = 0;
         float pid_pos_now = 0;
-        float controller_id = 0;
+        int controller_id = 0;
         float temp_mos1 = 0;
         float temp_mos2 = 0;
         float temp_mos3 = 0;
         float vd_volt = 0;
         float vq_volt = 0;
+        float pos = 0;
+        float vel = 0;
+        float volt = 0;
 
 };
 
@@ -51,8 +54,10 @@ class VESC_PACKET{
     public:
     int* packet_encoding( int comm , Ecat_raw data );
     int ethercat_send_cmd(int slave, int cmd , float value );
-    int get_bytes(int data[], int length , float div);
+    float get_bytes(int data[], int length , float div);
     int crc_check(int dataframe[], int len, int com_crch , int com_crcl);
+    void parsing_data(uint8 data[]);
+    VESC_VALUES value ;
    
 };
 
@@ -211,14 +216,41 @@ int VESC_PACKET::crc_check(int dataframe[], int len, int com_crch , int com_crcl
 
 }
 
-int VESC_PACKET::get_bytes(int data[], int length , float div)
+float VESC_PACKET::get_bytes(int data[], int length , float div=1)
 {
+    if(length >1)
+    {
+        int i = 0; //      
+        int j = length - 1; //      
+        int tmp;
+
+        while(i < j)
+        {
+            //   a[i] a[j]
+            tmp = data[i];
+            data[i] = data[j];
+            data[j] = tmp;
+
+            i++; //     
+            j--; //     
+        }
+
+    }
+
     int raw_value = 0. ;
     double value = 0.;
-    int result = 0;
-    for(int i = length ; i>-1 ; i--)
-        raw_value = raw_value | data[-(i+1)] << 8*i ;
+    float result = 0;
 
+    for(int i = length-1 ; i>-1 ; i--)
+    {
+        raw_value = raw_value | data[i] << 8*i ;
+    }
+        
+        
+    //cout<< raw_value <<endl;
+
+
+    //Negative hex value process
     switch (length)
     {
     case 4 :
@@ -239,13 +271,109 @@ int VESC_PACKET::get_bytes(int data[], int length , float div)
     }
 
     if (div == 1)
-    {
-        result = int(value);
-    }
+        {
+            result = float(value);
+        }
     else
-    {
-        result = int(value)/div;
-    }
+        {
+            result = float(value)/div;
+        }
+
+    // cout << result <<endl;
 
     return result;
+}
+
+void VESC_PACKET::parsing_data(uint8 data[])
+{   // DataFrame Divide
+    int ind = 0 ;
+    int start_byte = int(data[ind]); ind += 1;
+    int len = int(data[ind]); ind += 1;
+
+    int data_frame[len] ;
+    for (int i = ind ; i< ind+len ; i++)
+    {
+        data_frame[i-ind] = int(data[i]);
+    }
+    
+    ind += len;
+
+    int crc_frame[2];
+    for (int i = ind ; i< ind+2 ; i++)
+    {
+        crc_frame[i-ind] = int(data[i]);
+    }
+    ind += 2;
+
+    int end_byte = int(data[ind]);
+
+    // crc_check !
+    
+
+    // data Parsing
+    if ( start_byte ==2 && end_byte ==3 && crc_check(data_frame,len, crc_frame[0],crc_frame[1]))
+    {
+        int ind_f = 0;
+        int ind_r = len ;
+        int command = data_frame[ind_f]; ind_f += 1;
+        if (command == COMM_CUSTOM_APP_DATA)
+        {
+            int temp_frame[len];
+            /////////////////////////////////////////////////////////////////////////
+            for (int i = ind_f ; i< ind_f+1 ; i++)
+            {
+            temp_frame[i] = data_frame[i];
+            }
+
+            value.controller_id = data_frame[1] ; ind_f += 1;
+            //cout << value.controller_id;
+            /////////////////////////////////////////////////////////////////////////           
+            for (int i = ind_f ; i< ind_f+4 ; i++)
+            {
+            temp_frame[i-ind_f] = data_frame[i];
+            }
+            
+            value.pos = get_bytes(temp_frame,4,100); ind_f += 4;
+            /////////////////////////////////////////////////////////////////////////
+            for (int i = ind_f ; i< ind_f+4 ; i++)
+            {
+            temp_frame[i-ind_f] = data_frame[i];
+            }
+
+            value.vel = get_bytes(temp_frame,4,10000); ind_f += 4;
+
+            /////////////////////////////////////////////////////////////////////////
+            for (int i = ind_f ; i< ind_f+4 ; i++)
+            {
+            temp_frame[i-ind_f] = data_frame[i];
+            }
+
+            value.motor_current = get_bytes(temp_frame,4,10000); ind_f += 4;
+            //             cout << value.motor_current<<endl;
+
+
+            /////////////////////////////////////////////////////////////////////////
+            for (int i = ind_f ; i< ind_f+2 ; i++)
+            {
+            temp_frame[i-ind_f] = data_frame[i];
+            }
+
+            value.volt = get_bytes(temp_frame,4,10); ind_f += 2;
+            /////////////////////////////////////////////////////////////////////////
+            for (int i = ind_f ; i< ind_f+2 ; i++)
+            {
+            temp_frame[i-ind_f] = data_frame[i];
+            }
+
+            value.temp_motor = get_bytes(temp_frame,4,10); ind_f += 2;
+            /////////////////////////////////////////////////////////////////////////
+            for (int i = ind_f ; i< ind_f+2 ; i++)
+            {
+            temp_frame[i-ind_f] = data_frame[i];
+            }
+
+            value.temp_fet = get_bytes(temp_frame,4,10); ind_f += 2;
+         }
+        
+    }
 }

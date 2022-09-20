@@ -99,9 +99,9 @@
 #define COMM_SET_TRAJ 105
 
 
-double status_negative_value_process_2_byte (int raw_value)
+int status_negative_value_process_2_byte (int raw_value)
 {
-    double value;
+    int value;
 
     if (raw_value & 0x8000)
     {
@@ -116,9 +116,9 @@ double status_negative_value_process_2_byte (int raw_value)
 
 }
 
-double status_negative_value_process_3_byte (int raw_value)
+int status_negative_value_process_3_byte (int raw_value)
 {
-    double value;
+    int value;
 
     if (raw_value & 0x800000)
     {
@@ -133,9 +133,9 @@ double status_negative_value_process_3_byte (int raw_value)
 
 }
 
-double status_negative_value_process_4_byte (int raw_value)
+int status_negative_value_process_4_byte (int raw_value)
 {
-    double value;
+    int value;
 
     if (raw_value & 0x80000000)
     {

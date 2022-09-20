@@ -145,7 +145,14 @@ void ECat_init(char *ifname)
       *shmem[SLAVE_N] = ec_slavecount ;
 
       printf("Slave : %d \n",*shmem[SLAVE_N]);
-      *shmem[ECAT_INIT] = 1 ;
+      if(ec_slavecount != 0)
+      {
+         *shmem[ECAT_INIT] = 1 ;
+      }
+      else{
+         *shmem[ECAT_INIT] = -1 ;
+      }
+      
    }
    else
    {
@@ -161,6 +168,10 @@ void ECat_PDO_LOOP(void *arg)
    RT_TASK *curtask;
    rt_task_set_periodic(NULL, TM_NOW, LOOP_PERIOD);
    unsigned int i = 0;
+   uint8 data[25] = {0x02,0x14,0x24,0x03,0x00,0x04,0xc3,0x83,0xff,0xf8,0xb9,0x60,0x00,0x00,0x08,0x30,0x00,0xdc,0x01,0xdf,0x01,0xae,0x2f,0x1a,0x03};
+
+   int data_frame[19] = {3, 0, 4, 195, 131, 255, 248, 185, 96, 0, 0, 8, 48, 0, 220, 1, 223, 1, 174};
+
    while (1)
    {
      /* Start Loop - Write your Realtime Program*/
@@ -168,8 +179,10 @@ void ECat_PDO_LOOP(void *arg)
       
       vesc.ethercat_send_cmd(1,*shmem[MODE],duty_ratio);  //ethercat_send_cmd(int slave, string Mode, int duty )
       
+      
+      vesc.parsing_data(ec_slave[1].inputs);
+      rt_printf("Current : %f Vel : %f \r",vesc.value.motor_current , vesc.value.vel);
 
-      //rt_printf("%d\r",i);  
       ec_send_processdata();
       rt_task_wait_period(NULL);
       
