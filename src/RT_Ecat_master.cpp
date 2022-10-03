@@ -32,21 +32,21 @@ int main(int argc, char **argv)
 {
 
    signal(SIGINT,Exit_EventHandler);
-	// cpu_set_t set;
-	// CPU_ZERO(&set);
-	// CPU_SET(2,&set);
+	cpu_set_t set;
+	CPU_ZERO(&set);
+	CPU_SET(0,&set);
    ECat_init(argv[1],argv[2]);
    osal_thread_create(&thread1, 128000, (void*)&Ecatcheck, NULL);
    rt_task_create(&loop_task, "Ecat Loop", 0, 99, 0);
-   // rt_task_set_affinity(&loop_task,&set);
+   rt_task_set_affinity(&loop_task,&set);
    rt_task_start(&loop_task, &ECat_PDO_LOOP, 0);
 
- while (1)
- {
-   s_wait(semid[MODE]);
-   value= float(*shmem[VALUE])/100.0;
-   s_quit(semid[MODE]);
-}
+   while (1)
+   {
+     // s_wait(semid[MODE]);
+      value= float(*shmem[VALUE])/100.0;
+     // s_quit(semid[MODE]);
+   }
   return 0;
 }
 
@@ -80,7 +80,7 @@ void ECat_init(char *ifname, char *ifname2)
       ec_statecheck(0, EC_STATE_OPERATIONAL, 50000);
       while (chk-- && (ec_slave[0].state != EC_STATE_OPERATIONAL))
          ;
-         if(shmem_init()==1)
+         if(shmem_init()==1&&semp_init() == 1)
       {
          printf("Shared Memory Init Done!\n");
          *shmem[ECAT_INIT] = 1 ;

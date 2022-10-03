@@ -96,7 +96,7 @@ void s_quit(int semid){
     buf.sem_flg = SEM_UNDO;
 
     if(semop(semid ,&buf,1)==-1){
-    printf("<s_wait> Sempo error ! \n");
+    printf("<s_quit> Sempo error ! \n");
     return ;
     }
     
