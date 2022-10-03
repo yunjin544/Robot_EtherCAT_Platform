@@ -29,10 +29,11 @@ union semun{
 };
 
 
-
 extern int *shmem[SHARED_SIZE];
 extern int semid[SHARED_SIZE];
 extern union semun sem_union[SHARED_SIZE];
+
+
 int shmem_init();
 int shmem_clear();
 int semp_init();

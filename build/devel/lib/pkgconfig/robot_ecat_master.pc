@@ -1,4 +1,4 @@
-prefix=/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/devel
+prefix=/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/devel
 
 Name: robot_ecat_master
 Description: Description of robot_ecat_master

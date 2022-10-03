@@ -31,10 +31,112 @@ include rules.ninja
 
 
 #############################################
+# Utility command for install/local
+
+build CMakeFiles/install/local.util: CUSTOM_COMMAND all
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build install/local: phony CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/cmake -S/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform -B/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build rebuild_cache: phony CMakeFiles/rebuild_cache.util
+
+
+#############################################
+# Utility command for edit_cache
+
+build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build edit_cache: phony CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for test
+
+build CMakeFiles/test.util: CUSTOM_COMMAND
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/ctest --force-new-ctest-process
+  DESC = Running tests...
+  pool = console
+  restat = 1
+
+build test: phony CMakeFiles/test.util
+
+# =============================================================================
+# Object build statements for EXECUTABLE target RT_Ecat_master
+
+
+#############################################
+# Order-only phony target for RT_Ecat_master
+
+build cmake_object_order_depends_target_RT_Ecat_master: phony || CMakeFiles/RT_Ecat_master.dir
+
+build CMakeFiles/RT_Ecat_master.dir/src/RT_Ecat_master.cpp.o: CXX_COMPILER__RT_Ecat_master ../src/RT_Ecat_master.cpp || cmake_object_order_depends_target_RT_Ecat_master
+  DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"robot_ecat_master\"
+  DEP_FILE = CMakeFiles/RT_Ecat_master.dir/src/RT_Ecat_master.cpp.o.d
+  FLAGS = -g
+  INCLUDES = -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/soem -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -I/usr/xenomai/include/cobalt -I../includes
+  OBJECT_DIR = CMakeFiles/RT_Ecat_master.dir
+  OBJECT_FILE_DIR = CMakeFiles/RT_Ecat_master.dir/src
+
+build CMakeFiles/RT_Ecat_master.dir/src/Shared_Memory.cpp.o: CXX_COMPILER__RT_Ecat_master ../src/Shared_Memory.cpp || cmake_object_order_depends_target_RT_Ecat_master
+  DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"robot_ecat_master\"
+  DEP_FILE = CMakeFiles/RT_Ecat_master.dir/src/Shared_Memory.cpp.o.d
+  FLAGS = -g
+  INCLUDES = -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/soem -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -I/usr/xenomai/include/cobalt -I../includes
+  OBJECT_DIR = CMakeFiles/RT_Ecat_master.dir
+  OBJECT_FILE_DIR = CMakeFiles/RT_Ecat_master.dir/src
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target RT_Ecat_master
+
+
+#############################################
+# Link the executable devel/lib/robot_ecat_master/RT_Ecat_master
+
+build devel/lib/robot_ecat_master/RT_Ecat_master: CXX_EXECUTABLE_LINKER__RT_Ecat_master CMakeFiles/RT_Ecat_master.dir/src/RT_Ecat_master.cpp.o CMakeFiles/RT_Ecat_master.dir/src/Shared_Memory.cpp.o | /opt/ros/noetic/lib/libroscpp.so /usr/lib/x86_64-linux-gnu/libpthread.so /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0 /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0 /opt/ros/noetic/lib/librosconsole.so /opt/ros/noetic/lib/librosconsole_log4cxx.so /opt/ros/noetic/lib/librosconsole_backend_interface.so /usr/lib/x86_64-linux-gnu/liblog4cxx.so /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0 /opt/ros/noetic/lib/libxmlrpcpp.so /opt/ros/noetic/lib/libroscpp_serialization.so /opt/ros/noetic/lib/librostime.so /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0 /opt/ros/noetic/lib/libcpp_common.so /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0 /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0 /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
+  FLAGS = -g
+  LINK_FLAGS = -rdynamic
+  LINK_LIBRARIES = -Wl,-rpath,/opt/ros/noetic/lib  -lsoem  -lpthread  -lalchemy  -lcopperplate  -I/usr/include/xenomai/cobalt -I/usr/include/xenomai -D_GNU_SOURCE -D_REENTRANT -fasynchronous-unwind-tables -D__COBALT__ -D__COBALT_WRAP__  -Wl,--no-as-needed -Wl,@/usr/lib/cobalt.wrappers -Wl,@/usr/lib/modechk.wrappers  /usr/lib/xenomai/bootstrap.o -Wl,--wrap=main -Wl,--dynamic-list=/usr/lib/dynlist.ld -L/usr/lib -lcobalt -lmodechk -lpthread -lrt  /opt/ros/noetic/lib/libroscpp.so  -lpthread  /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0  /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0  /opt/ros/noetic/lib/librosconsole.so  /opt/ros/noetic/lib/librosconsole_log4cxx.so  /opt/ros/noetic/lib/librosconsole_backend_interface.so  -llog4cxx  /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0  /opt/ros/noetic/lib/libxmlrpcpp.so  /opt/ros/noetic/lib/libroscpp_serialization.so  /opt/ros/noetic/lib/librostime.so  /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0  /opt/ros/noetic/lib/libcpp_common.so  /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0  /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0  /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
+  OBJECT_DIR = CMakeFiles/RT_Ecat_master.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = devel/lib/robot_ecat_master/RT_Ecat_master
+  TARGET_PDB = RT_Ecat_master.dbg
+
+
+#############################################
+# Utility command for std_msgs_generate_messages_py
+
+build std_msgs_generate_messages_py: phony
+
+
+#############################################
+# Utility command for std_msgs_generate_messages_nodejs
+
+build std_msgs_generate_messages_nodejs: phony
+
+
+#############################################
 # Utility command for install/strip
 
 build CMakeFiles/install/strip.util: CUSTOM_COMMAND all
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
   DESC = Installing the project stripped...
   pool = console
   restat = 1
@@ -43,142 +145,9 @@ build install/strip: phony CMakeFiles/install/strip.util
 
 
 #############################################
-# Utility command for roscpp_generate_messages_nodejs
+# Utility command for std_msgs_generate_messages_cpp
 
-build roscpp_generate_messages_nodejs: phony
-
-
-#############################################
-# Utility command for std_msgs_generate_messages_eus
-
-build std_msgs_generate_messages_eus: phony
-
-# =============================================================================
-# Object build statements for EXECUTABLE target Shared_Test_Node
-
-
-#############################################
-# Order-only phony target for Shared_Test_Node
-
-build cmake_object_order_depends_target_Shared_Test_Node: phony || CMakeFiles/Shared_Test_Node.dir
-
-build CMakeFiles/Shared_Test_Node.dir/src/RT_Ecat_master_Shared_Mem.cpp.o: CXX_COMPILER__Shared_Test_Node ../src/RT_Ecat_master_Shared_Mem.cpp || cmake_object_order_depends_target_Shared_Test_Node
-  DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"robot_ecat_master\"
-  DEP_FILE = CMakeFiles/Shared_Test_Node.dir/src/RT_Ecat_master_Shared_Mem.cpp.o.d
-  FLAGS = -g
-  INCLUDES = -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/soem -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -I/usr/xenomai/include/cobalt -I../includes
-  OBJECT_DIR = CMakeFiles/Shared_Test_Node.dir
-  OBJECT_FILE_DIR = CMakeFiles/Shared_Test_Node.dir/src
-
-build CMakeFiles/Shared_Test_Node.dir/src/Shared_Memory.cpp.o: CXX_COMPILER__Shared_Test_Node ../src/Shared_Memory.cpp || cmake_object_order_depends_target_Shared_Test_Node
-  DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"robot_ecat_master\"
-  DEP_FILE = CMakeFiles/Shared_Test_Node.dir/src/Shared_Memory.cpp.o.d
-  FLAGS = -g
-  INCLUDES = -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/soem -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -I/usr/xenomai/include/cobalt -I../includes
-  OBJECT_DIR = CMakeFiles/Shared_Test_Node.dir
-  OBJECT_FILE_DIR = CMakeFiles/Shared_Test_Node.dir/src
-
-
-# =============================================================================
-# Link build statements for EXECUTABLE target Shared_Test_Node
-
-
-#############################################
-# Link the executable devel/lib/robot_ecat_master/Shared_Test_Node
-
-build devel/lib/robot_ecat_master/Shared_Test_Node: CXX_EXECUTABLE_LINKER__Shared_Test_Node CMakeFiles/Shared_Test_Node.dir/src/RT_Ecat_master_Shared_Mem.cpp.o CMakeFiles/Shared_Test_Node.dir/src/Shared_Memory.cpp.o | /opt/ros/noetic/lib/libroscpp.so /usr/lib/x86_64-linux-gnu/libpthread.so /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0 /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0 /opt/ros/noetic/lib/librosconsole.so /opt/ros/noetic/lib/librosconsole_log4cxx.so /opt/ros/noetic/lib/librosconsole_backend_interface.so /usr/lib/x86_64-linux-gnu/liblog4cxx.so /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0 /opt/ros/noetic/lib/libxmlrpcpp.so /opt/ros/noetic/lib/libroscpp_serialization.so /opt/ros/noetic/lib/librostime.so /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0 /opt/ros/noetic/lib/libcpp_common.so /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0 /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0 /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
-  FLAGS = -g
-  LINK_FLAGS = -rdynamic
-  LINK_LIBRARIES = -Wl,-rpath,/opt/ros/noetic/lib  -lsoem  -lpthread  -lalchemy  -lcopperplate  -I/usr/include/xenomai/cobalt -I/usr/include/xenomai -D_GNU_SOURCE -D_REENTRANT -fasynchronous-unwind-tables -D__COBALT__ -D__COBALT_WRAP__  -Wl,--no-as-needed -Wl,@/usr/lib/cobalt.wrappers -Wl,@/usr/lib/modechk.wrappers  /usr/lib/xenomai/bootstrap.o -Wl,--wrap=main -Wl,--dynamic-list=/usr/lib/dynlist.ld -L/usr/lib -lcobalt -lmodechk -lpthread -lrt  /opt/ros/noetic/lib/libroscpp.so  -lpthread  /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0  /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0  /opt/ros/noetic/lib/librosconsole.so  /opt/ros/noetic/lib/librosconsole_log4cxx.so  /opt/ros/noetic/lib/librosconsole_backend_interface.so  -llog4cxx  /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0  /opt/ros/noetic/lib/libxmlrpcpp.so  /opt/ros/noetic/lib/libroscpp_serialization.so  /opt/ros/noetic/lib/librostime.so  /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0  /opt/ros/noetic/lib/libcpp_common.so  /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0  /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0  /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
-  OBJECT_DIR = CMakeFiles/Shared_Test_Node.dir
-  POST_BUILD = :
-  PRE_LINK = :
-  TARGET_FILE = devel/lib/robot_ecat_master/Shared_Test_Node
-  TARGET_PDB = Shared_Test_Node.dbg
-
-
-#############################################
-# Utility command for install
-
-build CMakeFiles/install.util: CUSTOM_COMMAND all
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/cmake -P cmake_install.cmake
-  DESC = Install the project...
-  pool = console
-  restat = 1
-
-build install: phony CMakeFiles/install.util
-
-
-#############################################
-# Utility command for roscpp_generate_messages_cpp
-
-build roscpp_generate_messages_cpp: phony
-
-
-#############################################
-# Utility command for roscpp_generate_messages_py
-
-build roscpp_generate_messages_py: phony
-
-
-#############################################
-# Utility command for rosgraph_msgs_generate_messages_py
-
-build rosgraph_msgs_generate_messages_py: phony
-
-
-#############################################
-# Utility command for doxygen
-
-build doxygen: phony
-
-
-#############################################
-# Utility command for rosgraph_msgs_generate_messages_lisp
-
-build rosgraph_msgs_generate_messages_lisp: phony
-
-
-#############################################
-# Utility command for download_extra_data
-
-build download_extra_data: phony
-
-
-#############################################
-# Utility command for run_tests
-
-build run_tests: phony
-
-
-#############################################
-# Utility command for list_install_components
-
-build list_install_components: phony
-
-
-#############################################
-# Utility command for roscpp_generate_messages_lisp
-
-build roscpp_generate_messages_lisp: phony
-
-
-#############################################
-# Utility command for clean_test_results
-
-build clean_test_results: phony CMakeFiles/clean_test_results
-
-
-#############################################
-# Utility command for tests
-
-build tests: phony
-
-
-#############################################
-# Utility command for rosgraph_msgs_generate_messages_nodejs
-
-build rosgraph_msgs_generate_messages_nodejs: phony
+build std_msgs_generate_messages_cpp: phony
 
 # =============================================================================
 # Object build statements for EXECUTABLE target RT_Ecat_master_DC
@@ -217,21 +186,27 @@ build devel/lib/robot_ecat_master/RT_Ecat_master_DC: CXX_EXECUTABLE_LINKER__RT_E
 
 
 #############################################
-# Utility command for std_msgs_generate_messages_cpp
+# Utility command for rosgraph_msgs_generate_messages_nodejs
 
-build std_msgs_generate_messages_cpp: phony
-
-
-#############################################
-# Utility command for std_msgs_generate_messages_nodejs
-
-build std_msgs_generate_messages_nodejs: phony
+build rosgraph_msgs_generate_messages_nodejs: phony
 
 
 #############################################
-# Utility command for std_msgs_generate_messages_py
+# Utility command for tests
 
-build std_msgs_generate_messages_py: phony
+build tests: phony
+
+
+#############################################
+# Utility command for clean_test_results
+
+build clean_test_results: phony CMakeFiles/clean_test_results
+
+
+#############################################
+# Utility command for list_install_components
+
+build list_install_components: phony
 
 
 #############################################
@@ -239,69 +214,35 @@ build std_msgs_generate_messages_py: phony
 
 build std_msgs_generate_messages_lisp: phony
 
-# =============================================================================
-# Object build statements for EXECUTABLE target RT_Ecat_master
+
+#############################################
+# Utility command for run_tests
+
+build run_tests: phony
 
 
 #############################################
-# Order-only phony target for RT_Ecat_master
+# Utility command for download_extra_data
 
-build cmake_object_order_depends_target_RT_Ecat_master: phony || CMakeFiles/RT_Ecat_master.dir
-
-build CMakeFiles/RT_Ecat_master.dir/src/RT_Ecat_master.cpp.o: CXX_COMPILER__RT_Ecat_master ../src/RT_Ecat_master.cpp || cmake_object_order_depends_target_RT_Ecat_master
-  DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"robot_ecat_master\"
-  DEP_FILE = CMakeFiles/RT_Ecat_master.dir/src/RT_Ecat_master.cpp.o.d
-  FLAGS = -g
-  INCLUDES = -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/soem -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -I/usr/xenomai/include/cobalt -I../includes
-  OBJECT_DIR = CMakeFiles/RT_Ecat_master.dir
-  OBJECT_FILE_DIR = CMakeFiles/RT_Ecat_master.dir/src
-
-
-# =============================================================================
-# Link build statements for EXECUTABLE target RT_Ecat_master
+build download_extra_data: phony
 
 
 #############################################
-# Link the executable devel/lib/robot_ecat_master/RT_Ecat_master
+# Utility command for doxygen
 
-build devel/lib/robot_ecat_master/RT_Ecat_master: CXX_EXECUTABLE_LINKER__RT_Ecat_master CMakeFiles/RT_Ecat_master.dir/src/RT_Ecat_master.cpp.o | /opt/ros/noetic/lib/libroscpp.so /usr/lib/x86_64-linux-gnu/libpthread.so /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0 /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0 /opt/ros/noetic/lib/librosconsole.so /opt/ros/noetic/lib/librosconsole_log4cxx.so /opt/ros/noetic/lib/librosconsole_backend_interface.so /usr/lib/x86_64-linux-gnu/liblog4cxx.so /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0 /opt/ros/noetic/lib/libxmlrpcpp.so /opt/ros/noetic/lib/libroscpp_serialization.so /opt/ros/noetic/lib/librostime.so /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0 /opt/ros/noetic/lib/libcpp_common.so /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0 /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0 /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
-  FLAGS = -g
-  LINK_FLAGS = -rdynamic
-  LINK_LIBRARIES = -Wl,-rpath,/opt/ros/noetic/lib  -lsoem  -lpthread  -lalchemy  -lcopperplate  -I/usr/include/xenomai/cobalt -I/usr/include/xenomai -D_GNU_SOURCE -D_REENTRANT -fasynchronous-unwind-tables -D__COBALT__ -D__COBALT_WRAP__  -Wl,--no-as-needed -Wl,@/usr/lib/cobalt.wrappers -Wl,@/usr/lib/modechk.wrappers  /usr/lib/xenomai/bootstrap.o -Wl,--wrap=main -Wl,--dynamic-list=/usr/lib/dynlist.ld -L/usr/lib -lcobalt -lmodechk -lpthread -lrt  /opt/ros/noetic/lib/libroscpp.so  -lpthread  /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0  /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0  /opt/ros/noetic/lib/librosconsole.so  /opt/ros/noetic/lib/librosconsole_log4cxx.so  /opt/ros/noetic/lib/librosconsole_backend_interface.so  -llog4cxx  /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0  /opt/ros/noetic/lib/libxmlrpcpp.so  /opt/ros/noetic/lib/libroscpp_serialization.so  /opt/ros/noetic/lib/librostime.so  /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0  /opt/ros/noetic/lib/libcpp_common.so  /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0  /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0  /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
-  OBJECT_DIR = CMakeFiles/RT_Ecat_master.dir
-  POST_BUILD = :
-  PRE_LINK = :
-  TARGET_FILE = devel/lib/robot_ecat_master/RT_Ecat_master
-  TARGET_PDB = RT_Ecat_master.dbg
+build doxygen: phony
 
 
 #############################################
-# Utility command for rosgraph_msgs_generate_messages_cpp
+# Utility command for roscpp_generate_messages_py
 
-build rosgraph_msgs_generate_messages_cpp: phony
-
-
-#############################################
-# Utility command for test
-
-build CMakeFiles/test.util: CUSTOM_COMMAND
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/ctest --force-new-ctest-process
-  DESC = Running tests...
-  pool = console
-  restat = 1
-
-build test: phony CMakeFiles/test.util
+build roscpp_generate_messages_py: phony
 
 
 #############################################
-# Utility command for edit_cache
+# Utility command for roscpp_generate_messages_cpp
 
-build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-  DESC = No interactive CMake dialog available...
-  restat = 1
-
-build edit_cache: phony CMakeFiles/edit_cache.util
+build roscpp_generate_messages_cpp: phony
 
 
 #############################################
@@ -311,15 +252,45 @@ build roscpp_generate_messages_eus: phony
 
 
 #############################################
-# Utility command for rebuild_cache
+# Utility command for rosgraph_msgs_generate_messages_py
 
-build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/cmake -S/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform -B/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build
-  DESC = Running CMake to regenerate build system...
+build rosgraph_msgs_generate_messages_py: phony
+
+
+#############################################
+# Utility command for roscpp_generate_messages_lisp
+
+build roscpp_generate_messages_lisp: phony
+
+
+#############################################
+# Utility command for install
+
+build CMakeFiles/install.util: CUSTOM_COMMAND all
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/cmake -P cmake_install.cmake
+  DESC = Install the project...
   pool = console
   restat = 1
 
-build rebuild_cache: phony CMakeFiles/rebuild_cache.util
+build install: phony CMakeFiles/install.util
+
+
+#############################################
+# Utility command for std_msgs_generate_messages_eus
+
+build std_msgs_generate_messages_eus: phony
+
+
+#############################################
+# Utility command for roscpp_generate_messages_nodejs
+
+build roscpp_generate_messages_nodejs: phony
+
+
+#############################################
+# Utility command for rosgraph_msgs_generate_messages_cpp
+
+build rosgraph_msgs_generate_messages_cpp: phony
 
 
 #############################################
@@ -329,22 +300,16 @@ build rosgraph_msgs_generate_messages_eus: phony
 
 
 #############################################
-# Utility command for install/local
+# Utility command for rosgraph_msgs_generate_messages_lisp
 
-build CMakeFiles/install/local.util: CUSTOM_COMMAND all
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-  DESC = Installing only the local directory...
-  pool = console
-  restat = 1
-
-build install/local: phony CMakeFiles/install/local.util
+build rosgraph_msgs_generate_messages_lisp: phony
 
 
 #############################################
 # Custom command for CMakeFiles/clean_test_results
 
 build CMakeFiles/clean_test_results: CUSTOM_COMMAND
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/python3 /opt/ros/noetic/share/catkin/cmake/test/remove_test_results.py /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/test_results
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build && /usr/bin/python3 /opt/ros/noetic/share/catkin/cmake/test/remove_test_results.py /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/test_results
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
@@ -356,7 +321,7 @@ build CMakeFiles/clean_test_results: CUSTOM_COMMAND
 # Utility command for install/strip
 
 build gtest/CMakeFiles/install/strip.util: CUSTOM_COMMAND gtest/all
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest && /usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest && /usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
   DESC = Installing the project stripped...
   pool = console
   restat = 1
@@ -368,7 +333,7 @@ build gtest/install/strip: phony gtest/CMakeFiles/install/strip.util
 # Utility command for install/local
 
 build gtest/CMakeFiles/install/local.util: CUSTOM_COMMAND gtest/all
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest && /usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest && /usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
   DESC = Installing only the local directory...
   pool = console
   restat = 1
@@ -380,7 +345,7 @@ build gtest/install/local: phony gtest/CMakeFiles/install/local.util
 # Utility command for install
 
 build gtest/CMakeFiles/install.util: CUSTOM_COMMAND gtest/all
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest && /usr/bin/cmake -P cmake_install.cmake
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest && /usr/bin/cmake -P cmake_install.cmake
   DESC = Install the project...
   pool = console
   restat = 1
@@ -398,7 +363,7 @@ build gtest/list_install_components: phony
 # Utility command for rebuild_cache
 
 build gtest/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest && /usr/bin/cmake -S/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform -B/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest && /usr/bin/cmake -S/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform -B/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -410,7 +375,7 @@ build gtest/rebuild_cache: phony gtest/CMakeFiles/rebuild_cache.util
 # Utility command for edit_cache
 
 build gtest/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -421,7 +386,7 @@ build gtest/edit_cache: phony gtest/CMakeFiles/edit_cache.util
 # Utility command for test
 
 build gtest/CMakeFiles/test.util: CUSTOM_COMMAND
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest && /usr/bin/ctest --force-new-ctest-process
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest && /usr/bin/ctest --force-new-ctest-process
   DESC = Running tests...
   pool = console
   restat = 1
@@ -438,7 +403,7 @@ build gtest/test: phony gtest/CMakeFiles/test.util
 # Utility command for install/strip
 
 build gtest/googlemock/CMakeFiles/install/strip.util: CUSTOM_COMMAND gtest/googlemock/all
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock && /usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock && /usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
   DESC = Installing the project stripped...
   pool = console
   restat = 1
@@ -450,7 +415,7 @@ build gtest/googlemock/install/strip: phony gtest/googlemock/CMakeFiles/install/
 # Utility command for install/local
 
 build gtest/googlemock/CMakeFiles/install/local.util: CUSTOM_COMMAND gtest/googlemock/all
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock && /usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock && /usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
   DESC = Installing only the local directory...
   pool = console
   restat = 1
@@ -462,7 +427,7 @@ build gtest/googlemock/install/local: phony gtest/googlemock/CMakeFiles/install/
 # Utility command for install
 
 build gtest/googlemock/CMakeFiles/install.util: CUSTOM_COMMAND gtest/googlemock/all
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock && /usr/bin/cmake -P cmake_install.cmake
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock && /usr/bin/cmake -P cmake_install.cmake
   DESC = Install the project...
   pool = console
   restat = 1
@@ -480,7 +445,7 @@ build gtest/googlemock/list_install_components: phony
 # Utility command for rebuild_cache
 
 build gtest/googlemock/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock && /usr/bin/cmake -S/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform -B/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock && /usr/bin/cmake -S/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform -B/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -492,7 +457,7 @@ build gtest/googlemock/rebuild_cache: phony gtest/googlemock/CMakeFiles/rebuild_
 # Utility command for edit_cache
 
 build gtest/googlemock/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -503,7 +468,7 @@ build gtest/googlemock/edit_cache: phony gtest/googlemock/CMakeFiles/edit_cache.
 # Utility command for test
 
 build gtest/googlemock/CMakeFiles/test.util: CUSTOM_COMMAND
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock && /usr/bin/ctest --force-new-ctest-process
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock && /usr/bin/ctest --force-new-ctest-process
   DESC = Running tests...
   pool = console
   restat = 1
@@ -537,7 +502,7 @@ build gtest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o: CXX_COMPIL
 
 build gtest/lib/libgmock_maind.so: CXX_SHARED_LIBRARY_LINKER__gmock_main gtest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o | gtest/lib/libgmockd.so gtest/lib/libgtestd.so || gtest/lib/libgmockd.so gtest/lib/libgtestd.so
   LANGUAGE_COMPILE_FLAGS = -g
-  LINK_LIBRARIES = -Wl,-rpath,/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/lib  gtest/lib/libgmockd.so  gtest/lib/libgtestd.so  -lpthread
+  LINK_LIBRARIES = -Wl,-rpath,/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/lib  gtest/lib/libgmockd.so  gtest/lib/libgtestd.so  -lpthread
   OBJECT_DIR = gtest/googlemock/CMakeFiles/gmock_main.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -573,7 +538,7 @@ build gtest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o: CXX_COMPILER__gm
 
 build gtest/lib/libgmockd.so: CXX_SHARED_LIBRARY_LINKER__gmock gtest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o | gtest/lib/libgtestd.so || gtest/lib/libgtestd.so
   LANGUAGE_COMPILE_FLAGS = -g
-  LINK_LIBRARIES = -Wl,-rpath,/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/lib  gtest/lib/libgtestd.so  -lpthread
+  LINK_LIBRARIES = -Wl,-rpath,/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/lib  gtest/lib/libgtestd.so  -lpthread
   OBJECT_DIR = gtest/googlemock/CMakeFiles/gmock.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -592,7 +557,7 @@ build gtest/lib/libgmockd.so: CXX_SHARED_LIBRARY_LINKER__gmock gtest/googlemock/
 # Utility command for install/strip
 
 build gtest/googletest/CMakeFiles/install/strip.util: CUSTOM_COMMAND gtest/googletest/all
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest && /usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest && /usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
   DESC = Installing the project stripped...
   pool = console
   restat = 1
@@ -604,7 +569,7 @@ build gtest/googletest/install/strip: phony gtest/googletest/CMakeFiles/install/
 # Utility command for install/local
 
 build gtest/googletest/CMakeFiles/install/local.util: CUSTOM_COMMAND gtest/googletest/all
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest && /usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest && /usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
   DESC = Installing only the local directory...
   pool = console
   restat = 1
@@ -616,7 +581,7 @@ build gtest/googletest/install/local: phony gtest/googletest/CMakeFiles/install/
 # Utility command for install
 
 build gtest/googletest/CMakeFiles/install.util: CUSTOM_COMMAND gtest/googletest/all
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest && /usr/bin/cmake -P cmake_install.cmake
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest && /usr/bin/cmake -P cmake_install.cmake
   DESC = Install the project...
   pool = console
   restat = 1
@@ -634,7 +599,7 @@ build gtest/googletest/list_install_components: phony
 # Utility command for rebuild_cache
 
 build gtest/googletest/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest && /usr/bin/cmake -S/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform -B/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest && /usr/bin/cmake -S/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform -B/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -646,7 +611,7 @@ build gtest/googletest/rebuild_cache: phony gtest/googletest/CMakeFiles/rebuild_
 # Utility command for edit_cache
 
 build gtest/googletest/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -657,7 +622,7 @@ build gtest/googletest/edit_cache: phony gtest/googletest/CMakeFiles/edit_cache.
 # Utility command for test
 
 build gtest/googletest/CMakeFiles/test.util: CUSTOM_COMMAND
-  COMMAND = cd /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest && /usr/bin/ctest --force-new-ctest-process
+  COMMAND = cd /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest && /usr/bin/ctest --force-new-ctest-process
   DESC = Running tests...
   pool = console
   restat = 1
@@ -691,7 +656,7 @@ build gtest/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o: CXX_COMPIL
 
 build gtest/lib/libgtest_maind.so: CXX_SHARED_LIBRARY_LINKER__gtest_main gtest/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o | gtest/lib/libgtestd.so || gtest/lib/libgtestd.so
   LANGUAGE_COMPILE_FLAGS = -g
-  LINK_LIBRARIES = -Wl,-rpath,/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/lib  gtest/lib/libgtestd.so  -lpthread
+  LINK_LIBRARIES = -Wl,-rpath,/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/lib  gtest/lib/libgtestd.so  -lpthread
   OBJECT_DIR = gtest/googletest/CMakeFiles/gtest_main.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -743,8 +708,6 @@ build RT_Ecat_master: phony devel/lib/robot_ecat_master/RT_Ecat_master
 
 build RT_Ecat_master_DC: phony devel/lib/robot_ecat_master/RT_Ecat_master_DC
 
-build Shared_Test_Node: phony devel/lib/robot_ecat_master/Shared_Test_Node
-
 build gmock: phony gtest/lib/libgmockd.so
 
 build gmock_main: phony gtest/lib/libgmock_maind.so
@@ -767,28 +730,28 @@ build libgtestd.so: phony gtest/lib/libgtestd.so
 # =============================================================================
 
 #############################################
-# Folder: /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build
+# Folder: /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build
 
-build all: phony devel/lib/robot_ecat_master/Shared_Test_Node devel/lib/robot_ecat_master/RT_Ecat_master_DC devel/lib/robot_ecat_master/RT_Ecat_master gtest/all
+build all: phony devel/lib/robot_ecat_master/RT_Ecat_master devel/lib/robot_ecat_master/RT_Ecat_master_DC gtest/all
 
 # =============================================================================
 
 #############################################
-# Folder: /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest
+# Folder: /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest
 
 build gtest/all: phony gtest/googlemock/all
 
 # =============================================================================
 
 #############################################
-# Folder: /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock
+# Folder: /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googlemock
 
 build gtest/googlemock/all: phony gtest/googletest/all
 
 # =============================================================================
 
 #############################################
-# Folder: /home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest
+# Folder: /home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest
 
 build gtest/googletest/all: phony
 

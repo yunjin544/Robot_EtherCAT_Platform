@@ -22,7 +22,7 @@ rule CUSTOM_COMMAND
 #############################################
 # Rule for compiling CXX files.
 
-rule CXX_COMPILER__Shared_Test_Node
+rule CXX_COMPILER__RT_Ecat_master
   depfile = $DEP_FILE
   deps = gcc
   command = /usr/bin/g++  $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -32,7 +32,7 @@ rule CXX_COMPILER__Shared_Test_Node
 #############################################
 # Rule for linking CXX executable.
 
-rule CXX_EXECUTABLE_LINKER__Shared_Test_Node
+rule CXX_EXECUTABLE_LINKER__RT_Ecat_master
   command = $PRE_LINK && /usr/bin/g++  $FLAGS  $LINK_FLAGS $in  -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
@@ -52,25 +52,6 @@ rule CXX_COMPILER__RT_Ecat_master_DC
 # Rule for linking CXX executable.
 
 rule CXX_EXECUTABLE_LINKER__RT_Ecat_master_DC
-  command = $PRE_LINK && /usr/bin/g++  $FLAGS  $LINK_FLAGS $in  -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
-  description = Linking CXX executable $TARGET_FILE
-  restat = $RESTAT
-
-
-#############################################
-# Rule for compiling CXX files.
-
-rule CXX_COMPILER__RT_Ecat_master
-  depfile = $DEP_FILE
-  deps = gcc
-  command = /usr/bin/g++  $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
-  description = Building CXX object $out
-
-
-#############################################
-# Rule for linking CXX executable.
-
-rule CXX_EXECUTABLE_LINKER__RT_Ecat_master
   command = $PRE_LINK && /usr/bin/g++  $FLAGS  $LINK_FLAGS $in  -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
@@ -156,7 +137,7 @@ rule CXX_SHARED_LIBRARY_LINKER__gtest
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /usr/bin/cmake -S/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform -B/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build
+  command = /usr/bin/cmake -S/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform -B/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build
   description = Re-running CMake...
   generator = 1
 

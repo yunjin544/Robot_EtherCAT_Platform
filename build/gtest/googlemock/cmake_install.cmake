@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/drcl-yunjin/Documents/ros_ws/ecat_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest/cmake_install.cmake")
+  include("/home/drcl-ethercat/Documents/ros_ws/EtherCAT_ws/src/Robot_EtherCAT_Platform/build/gtest/googletest/cmake_install.cmake")
 
 endif()
 

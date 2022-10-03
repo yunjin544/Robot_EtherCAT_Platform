@@ -38,6 +38,19 @@ int shmem_clear(){
 
 }
 
+int semp_clear(){
+    
+    void *memory_segment = NULL;
+
+    for(char i=0; i<SHARED_SIZE; i++)
+    {
+        (semid[i] = semget(KEY_NUM+i,sizeof(char),IPC_CREAT|0666));
+        if (semctl(semid[i],IPC_RMID,NULL)==-1) return -1;
+    }
+    return 0;
+
+}
+
 int semp_init(){
 
     for(char i=0; i<SHARED_SIZE; i++)
@@ -51,7 +64,7 @@ int semp_init(){
         semctl(semid[i],0,SETVAL,sem_union[i]);
     }
     }
-    return 0;
+    return 1;
 
 }
 
@@ -59,7 +72,7 @@ void Exit_EventHandler(int sig)
 {
     signal(sig,SIG_IGN);
     shmem_clear();
-
+    semp_clear();
     exit(1);
 }
 
